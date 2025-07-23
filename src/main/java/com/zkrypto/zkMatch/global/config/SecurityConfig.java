@@ -1,10 +1,12 @@
 package com.zkrypto.zkMatch.global.config;
 
+import com.zkrypto.zkMatch.domain.member.domain.constant.Role;
 import com.zkrypto.zkMatch.global.jwt.JwtAuthenticationFilter;
 import com.zkrypto.zkMatch.global.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -40,6 +42,14 @@ public class SecurityConfig {
                     authorizeRequest.requestMatchers("/v3/api-docs/**").permitAll();
                     authorizeRequest.requestMatchers("/swagger-resources/**").permitAll();
                     authorizeRequest.requestMatchers("/swagger-ui/**").permitAll();
+
+                    // auth api 설정
+                    authorizeRequest.requestMatchers("/auth/**").permitAll();
+
+                    // corporation api 설정
+                    authorizeRequest.requestMatchers(HttpMethod.POST, "/corporation").permitAll();
+                    authorizeRequest.requestMatchers(HttpMethod.GET, "/corporation").hasAuthority(Role.ROLE_ADMIN.toString());
+                    authorizeRequest.requestMatchers( "/corporation/post/**").hasAuthority(Role.ROLE_ADMIN.toString());
 
                     // 나머지 모든 API는 Jwt 인증 필요
                     authorizeRequest.anyRequest().authenticated();
