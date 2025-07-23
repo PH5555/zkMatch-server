@@ -1,7 +1,7 @@
 package com.zkrypto.zkMatch.domain.corporation.presentation;
 
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
-import com.zkrypto.zkMatch.domain.corporation.application.dto.response.CorporationPostResponse;
+import com.zkrypto.zkMatch.domain.post.application.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.application.request.PassApplierCommand;
 import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
 import com.zkrypto.zkMatch.domain.post.application.response.PostApplierResponse;
@@ -35,7 +35,7 @@ public class CorporationController {
                     @Parameter(
                             in = ParameterIn.HEADER,
                             name = "Authorization",
-                            description = "Bearer 토큰",
+                            description = "Bearer 토큰(ADMIN)",
                             required = true
                     )
             }
@@ -72,7 +72,7 @@ public class CorporationController {
                     @Parameter(
                             in = ParameterIn.HEADER,
                             name = "Authorization",
-                            description = "Bearer 토큰",
+                            description = "Bearer 토큰(ADMIN)",
                             required = true
                     )
             }
@@ -96,7 +96,7 @@ public class CorporationController {
                     @Parameter(
                             in = ParameterIn.HEADER,
                             name = "Authorization",
-                            description = "Bearer 토큰",
+                            description = "Bearer 토큰(ADMIN)",
                             required = true
                     )
             }
@@ -120,7 +120,7 @@ public class CorporationController {
                     @Parameter(
                             in = ParameterIn.HEADER,
                             name = "Authorization",
-                            description = "Bearer 토큰",
+                            description = "Bearer 토큰(ADMIN)",
                             required = true
                     )
             }
@@ -144,7 +144,7 @@ public class CorporationController {
                     @Parameter(
                             in = ParameterIn.HEADER,
                             name = "Authorization",
-                            description = "Bearer 토큰",
+                            description = "Bearer 토큰(ADMIN)",
                             required = true
                     )
             }
