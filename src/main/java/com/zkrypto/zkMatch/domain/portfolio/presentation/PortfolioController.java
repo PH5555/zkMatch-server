@@ -1,6 +1,5 @@
 package com.zkrypto.zkMatch.domain.portfolio.presentation;
 
-import com.zkrypto.zkMatch.domain.member.application.response.MemberResponse;
 import com.zkrypto.zkMatch.domain.portfolio.application.request.DidVerifyCommand;
 import com.zkrypto.zkMatch.domain.portfolio.application.response.PortfolioResponse;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
