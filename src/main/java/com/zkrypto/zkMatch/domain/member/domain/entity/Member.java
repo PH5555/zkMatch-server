@@ -15,4 +15,11 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    private String loginId;
+    private String password;
+    private String refreshToken;
+
+    public void storeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
