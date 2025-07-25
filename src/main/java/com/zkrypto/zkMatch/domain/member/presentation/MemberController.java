@@ -1,6 +1,7 @@
 package com.zkrypto.zkMatch.domain.member.presentation;
 
-import com.zkrypto.zkMatch.domain.member.application.response.MemberResponse;
+import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberResponse;
+import com.zkrypto.zkMatch.domain.member.application.service.MemberService;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +22,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/member")
+@RequiredArgsConstructor
 @Tag(name = "MemberController", description = "멤버 관련 API")
 public class MemberController {
+
+    private final MemberService memberService;
 
     @Operation(
             summary = "로그아웃 API",
@@ -42,8 +47,9 @@ public class MemberController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @DeleteMapping()
-    public void signOut(@AuthenticationPrincipal UUID memberId){
-
+    public ApiResponse<Void> signOut(@AuthenticationPrincipal UUID memberId){
+        memberService.signOut(memberId);
+        return ApiResponse.success();
     }
 
     @Operation(
@@ -67,6 +73,6 @@ public class MemberController {
     })
     @GetMapping()
     public ApiResponse<MemberResponse> getMember(@AuthenticationPrincipal UUID memberId) {
-        return ApiResponse.success(null);
+        return ApiResponse.success(memberService.getMember(memberId));
     }
 }
