@@ -1,6 +1,7 @@
 package com.zkrypto.zkMatch.domain.corporation.application.service;
 
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
+import com.zkrypto.zkMatch.domain.corporation.application.dto.response.CorporationResponse;
 import com.zkrypto.zkMatch.domain.corporation.domain.entity.Corporation;
 import com.zkrypto.zkMatch.domain.corporation.domain.repository.CorporationRepository;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -40,5 +43,15 @@ public class CorporationService {
         // 기업 생성
         Corporation corporation = Corporation.from(corporationCreationCommand, member);
         corporationRepository.save(corporation);
+    }
+
+    /**
+     * 기업 조회 메서드
+     */
+    public CorporationResponse getCorporation(UUID memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+
+        return new CorporationResponse(member.getCorporation().getCorporationName());
     }
 }

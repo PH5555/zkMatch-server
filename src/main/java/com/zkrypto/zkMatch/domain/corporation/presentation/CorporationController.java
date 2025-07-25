@@ -1,6 +1,7 @@
 package com.zkrypto.zkMatch.domain.corporation.presentation;
 
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
+import com.zkrypto.zkMatch.domain.corporation.application.dto.response.CorporationResponse;
 import com.zkrypto.zkMatch.domain.corporation.application.service.CorporationService;
 import com.zkrypto.zkMatch.domain.post.application.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.application.request.PassApplierCommand;
@@ -48,11 +49,11 @@ public class CorporationController {
     )
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청 성공",
-                    content = {@Content(schema = @Schema(implementation = Void.class))}),
+                    content = {@Content(schema = @Schema(implementation = CorporationResponse.class))}),
     })
     @GetMapping()
-    public void getCorporation(@AuthenticationPrincipal UUID memberId) {
-
+    public ApiResponse<CorporationResponse> getCorporation(@AuthenticationPrincipal UUID memberId) {
+        return ApiResponse.success(corporationService.getCorporation(memberId));
     }
 
     @Operation(

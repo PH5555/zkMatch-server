@@ -3,12 +3,14 @@ package com.zkrypto.zkMatch.domain.corporation.domain.entity;
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Corporation {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID corporationId;
