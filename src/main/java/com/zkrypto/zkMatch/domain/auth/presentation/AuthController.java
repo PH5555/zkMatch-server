@@ -27,8 +27,9 @@ public class AuthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청 성공",
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
-    public void signUp(@RequestBody SignUpCommand signUpCommand) {
+    public ApiResponse<Void> signUp(@RequestBody SignUpCommand signUpCommand) {
         authService.signUp(signUpCommand);
+        return ApiResponse.success();
     }
 
     @Operation(summary = "로그인 API")

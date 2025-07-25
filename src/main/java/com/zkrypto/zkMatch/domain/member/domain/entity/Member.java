@@ -21,11 +21,18 @@ public class Member {
     private String loginId;
     private String password;
     private String refreshToken;
+    private String name;
+    private String email;
+    private String phoneNumber;
 
-    public Member(Role role, String loginId, String password) {
+    private Member(Role role, String loginId, String password) {
         this.role = role;
         this.loginId = loginId;
         this.password = password;
+    }
+
+    public void signOut() {
+        this.refreshToken = null;
     }
 
     public void storeRefreshToken(String refreshToken) {
