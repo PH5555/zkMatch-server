@@ -1,6 +1,7 @@
 package com.zkrypto.zkMatch.domain.corporation.presentation;
 
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
+import com.zkrypto.zkMatch.domain.corporation.application.service.CorporationService;
 import com.zkrypto.zkMatch.domain.post.application.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.application.request.PassApplierCommand;
 import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/corporation")
+@RequiredArgsConstructor
 @Tag(name = "CorporationController", description = "기업 관련 API")
 public class CorporationController {
+
+    private final CorporationService corporationService;
+
     @Operation(
             summary = "기업 정보 조회 API",
             description = "기업 정보를 조회 합니다.",
@@ -58,8 +64,9 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PostMapping()
-    public void createCorporation(@RequestBody CorporationCreationCommand corporationCreationCommand) {
-
+    public ApiResponse<Void> createCorporation(@RequestBody CorporationCreationCommand corporationCreationCommand) {
+        corporationService.createCorporation(corporationCreationCommand);
+        return ApiResponse.success();
     }
 
     @Operation(
