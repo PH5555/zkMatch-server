@@ -24,9 +24,10 @@ public class AuthService {
     /**
      *  회원 가입 메서드
      */
+    @Transactional
     public void signUp(SignUpCommand signUpCommand) {
         // 아이디 중복 확인
-        if(!memberRepository.existsByLoginId(signUpCommand.getLoginId())) {
+        if(memberRepository.existsByLoginId(signUpCommand.getLoginId())) {
            throw new CustomException(ErrorCode.ID_DUPLICATION);
         }
 
@@ -34,6 +35,8 @@ public class AuthService {
         String hashedPassword = passwordEncoder.encode(signUpCommand.getPassword());
 
         // 유저 생성
+        Member member = Member.from(signUpCommand, hashedPassword);
+        memberRepository.save(member);
     }
 
 
