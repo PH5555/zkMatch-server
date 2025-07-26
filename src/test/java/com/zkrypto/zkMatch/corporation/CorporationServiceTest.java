@@ -6,12 +6,17 @@ import com.zkrypto.zkMatch.domain.corporation.application.service.CorporationSer
 import com.zkrypto.zkMatch.domain.corporation.domain.repository.CorporationRepository;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
+import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
+import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +32,9 @@ public class CorporationServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    PostRepository postRepository;
 
     @Test
     void 생성_테스트() {
@@ -55,5 +63,22 @@ public class CorporationServiceTest {
 
         // 조회 테스트
         assertThat(corporation.getCorporationName()).isEqualTo("지크립토");
+    }
+
+    @Test
+    void 공고_생성_테스트() {
+        // 기업 생성
+        CorporationCreationCommand command = new CorporationCreationCommand(null, "1234", "지크립토", null, null, "1234", "1234");
+        corporationService.createCorporation(command);
+
+        // 멤버 조회
+        Member member = memberRepository.findMemberByLoginId("1234").get();
+
+        // 공고 생성
+        corporationService.createPost(member.getMemberId(), new PostCreationCommand());
+
+        // 생성 테스트
+        List<Post> posts = postRepository.findPostByCorporation(member.getCorporation());
+        assertThat(posts.size()).isEqualTo(1);
     }
 }

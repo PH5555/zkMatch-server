@@ -4,11 +4,13 @@ import com.zkrypto.zkMatch.domain.corporation.domain.entity.Corporation;
 import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Post {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
