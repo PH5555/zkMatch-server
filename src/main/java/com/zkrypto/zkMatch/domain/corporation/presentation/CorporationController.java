@@ -114,7 +114,7 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PostMapping("/post")
-    public void createPost(@RequestBody PostCreationCommand postCreationCommand){
+    public ApiResponse<Void> createPost(@RequestBody PostCreationCommand postCreationCommand){
 
     }
 
