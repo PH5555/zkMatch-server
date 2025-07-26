@@ -7,6 +7,8 @@ import com.zkrypto.zkMatch.domain.corporation.domain.repository.CorporationRepos
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
 import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
+import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
 import com.zkrypto.zkMatch.global.response.exception.CustomException;
 import com.zkrypto.zkMatch.global.response.exception.ErrorCode;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,8 @@ public class CorporationService {
     private final CorporationRepository corporationRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postRepository;
+
     /**
      * 기업 생성 메서드
      */
@@ -60,7 +64,13 @@ public class CorporationService {
     /**
      * 기업 공고 생성 메서드
      */
-    public void createPost(PostCreationCommand postCreationCommand) {
+    public void createPost(UUID memberId, PostCreationCommand postCreationCommand) {
+        // 멤버 존재 확인
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
 
+        // 공고 생성
+        Post post = Post.from(postCreationCommand, member.getCorporation());
+        postRepository.save(post);
     }
 }

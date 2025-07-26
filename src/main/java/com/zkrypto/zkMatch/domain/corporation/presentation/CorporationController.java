@@ -114,8 +114,9 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PostMapping("/post")
-    public ApiResponse<Void> createPost(@RequestBody PostCreationCommand postCreationCommand){
-
+    public ApiResponse<Void> createPost(@AuthenticationPrincipal UUID memberId, @RequestBody PostCreationCommand postCreationCommand){
+        corporationService.createPost(memberId, postCreationCommand);
+        return ApiResponse.success();
     }
 
     @Operation(
