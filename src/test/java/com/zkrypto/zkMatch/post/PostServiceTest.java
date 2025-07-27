@@ -12,6 +12,7 @@ import com.zkrypto.zkMatch.domain.post.application.service.PostService;
 import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
 import com.zkrypto.zkMatch.domain.recruit.domain.entity.Recruit;
 import com.zkrypto.zkMatch.domain.recruit.domain.repository.RecruitRepository;
+import com.zkrypto.zkMatch.global.response.exception.ErrorCode;
 import com.zkrypto.zkMatch.global.utils.ReflectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -101,5 +102,72 @@ public class PostServiceTest {
         // 검증
         List<Recruit> recruit = recruitRepository.findByMember(member);
         Assertions.assertThat(recruit.get(0).getPost().getPostId()).isEqualTo(UUID.fromString(posts.get(0).getPostId()));
+    }
+
+    @Test
+    void 공고_지원_테스트_기한_지남() {
+        // 기업 생성
+        CorporationCreationCommand corporationCreationCommand = new CorporationCreationCommand();
+        ReflectionUtil.setter(corporationCreationCommand, "corporationName", "지크립토");
+        ReflectionUtil.setter(corporationCreationCommand, "loginId", "1234");
+        ReflectionUtil.setter(corporationCreationCommand, "password", "1234");
+
+        corporationService.createCorporation(corporationCreationCommand);
+
+        // 관리자 조회
+        Member admin = memberRepository.findMemberByLoginId("1234").get();
+
+        // 공고 생성
+        PostCreationCommand postCreationCommand = new PostCreationCommand();
+        ReflectionUtil.setter(postCreationCommand, "endDate", LocalDateTime.of(2025, 1,1, 1, 1));
+        corporationService.createPost(admin.getMemberId(), postCreationCommand);
+
+        // 멤버 생성
+        Member member = new Member();
+        memberRepository.save(member);
+
+        // 공고 조회
+        List<PostResponse> posts = postService.getPost();
+
+        // 공고 지원
+        PostApplyCommand postApplyCommand = new PostApplyCommand();
+        ReflectionUtil.setter(postApplyCommand, "postId", posts.get(0).getPostId());
+
+        // 공고 제출 기한 지남 검증
+        Assertions.assertThatThrownBy(() -> postService.applyPost(member.getMemberId(), postApplyCommand)).hasMessage(ErrorCode.EXPIRED_POST.getMessage());
+    }
+
+    @Test
+    void 공고_지원_테스트_중복_제출() {
+        // 기업 생성
+        CorporationCreationCommand corporationCreationCommand = new CorporationCreationCommand();
+        ReflectionUtil.setter(corporationCreationCommand, "corporationName", "지크립토");
+        ReflectionUtil.setter(corporationCreationCommand, "loginId", "1234");
+        ReflectionUtil.setter(corporationCreationCommand, "password", "1234");
+
+        corporationService.createCorporation(corporationCreationCommand);
+
+        // 관리자 조회
+        Member admin = memberRepository.findMemberByLoginId("1234").get();
+
+        // 공고 생성
+        PostCreationCommand postCreationCommand = new PostCreationCommand();
+        ReflectionUtil.setter(postCreationCommand, "endDate", LocalDateTime.of(2026, 1,1, 1, 1));
+        corporationService.createPost(admin.getMemberId(), postCreationCommand);
+
+        // 멤버 생성
+        Member member = new Member();
+        memberRepository.save(member);
+
+        // 공고 조회
+        List<PostResponse> posts = postService.getPost();
+
+        // 공고 지원
+        PostApplyCommand postApplyCommand = new PostApplyCommand();
+        ReflectionUtil.setter(postApplyCommand, "postId", posts.get(0).getPostId());
+        postService.applyPost(member.getMemberId(), postApplyCommand);
+
+        // 중복 제출 검증
+        Assertions.assertThatThrownBy(() -> postService.applyPost(member.getMemberId(), postApplyCommand)).hasMessage(ErrorCode.ALREADY_APPLIED_POST.getMessage());
     }
 }
