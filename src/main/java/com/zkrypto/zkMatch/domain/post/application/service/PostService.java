@@ -11,6 +11,7 @@ import com.zkrypto.zkMatch.domain.recruit.domain.repository.RecruitRepository;
 import com.zkrypto.zkMatch.global.response.exception.CustomException;
 import com.zkrypto.zkMatch.global.response.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -51,6 +53,7 @@ public class PostService {
         }
 
         // 제출 기한이 지난 공고인지 확인
+        log.info(post.getEndDate().toString());
         if(LocalDateTime.now().isAfter(post.getEndDate())) {
             throw new CustomException(ErrorCode.EXPIRED_POST);
         }

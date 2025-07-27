@@ -1,5 +1,6 @@
 package com.zkrypto.zkMatch.domain.post.application.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

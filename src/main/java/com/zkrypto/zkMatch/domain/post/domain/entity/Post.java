@@ -25,12 +25,14 @@ public class Post {
     @JoinColumn(name = "corporation_id")
     private Corporation corporation;
 
-    public Post(String title, Corporation corporation) {
+    public Post(String title, Corporation corporation, LocalDateTime startDate, LocalDateTime endDate) {
         this.title = title;
         this.corporation = corporation;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public static Post from(PostCreationCommand command, Corporation corporation) {
-        return new Post(command.getTitle(), corporation);
+        return new Post(command.getTitle(), corporation, command.getStartDate(), command.getEndDate());
     }
 }

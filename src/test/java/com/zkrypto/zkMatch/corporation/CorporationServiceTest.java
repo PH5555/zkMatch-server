@@ -9,6 +9,7 @@ import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
 import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
 import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
 import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
+import com.zkrypto.zkMatch.global.utils.ReflectionUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,8 +39,12 @@ public class CorporationServiceTest {
     @Test
     void 생성_테스트() {
         // 기업 생성
-        CorporationCreationCommand command = new CorporationCreationCommand(null, "1234", "지크립토", null, null, "1234", "1234");
-        corporationService.createCorporation(command);
+        CorporationCreationCommand corporationCreationCommand = new CorporationCreationCommand();
+        ReflectionUtil.setter(corporationCreationCommand, "corporationName", "지크립토");
+        ReflectionUtil.setter(corporationCreationCommand, "loginId", "1234");
+        ReflectionUtil.setter(corporationCreationCommand, "password", "1234");
+
+        corporationService.createCorporation(corporationCreationCommand);
 
         // member 생성 테스트
         boolean memberTest = memberRepository.existsByLoginId("1234");
@@ -53,8 +58,12 @@ public class CorporationServiceTest {
     @Test
     void 조회_테스트() {
         // 기업 생성
-        CorporationCreationCommand command = new CorporationCreationCommand(null, "1234", "지크립토", null, null, "1234", "1234");
-        corporationService.createCorporation(command);
+        CorporationCreationCommand corporationCreationCommand = new CorporationCreationCommand();
+        ReflectionUtil.setter(corporationCreationCommand, "corporationName", "지크립토");
+        ReflectionUtil.setter(corporationCreationCommand, "loginId", "1234");
+        ReflectionUtil.setter(corporationCreationCommand, "password", "1234");
+
+        corporationService.createCorporation(corporationCreationCommand);
 
         // 기업 조회
         Member member = memberRepository.findMemberByLoginId("1234").get();
@@ -67,8 +76,12 @@ public class CorporationServiceTest {
     @Test
     void 공고_생성_테스트() {
         // 기업 생성
-        CorporationCreationCommand command = new CorporationCreationCommand(null, "1234", "지크립토", null, null, "1234", "1234");
-        corporationService.createCorporation(command);
+        CorporationCreationCommand corporationCreationCommand = new CorporationCreationCommand();
+        ReflectionUtil.setter(corporationCreationCommand, "corporationName", "지크립토");
+        ReflectionUtil.setter(corporationCreationCommand, "loginId", "1234");
+        ReflectionUtil.setter(corporationCreationCommand, "password", "1234");
+
+        corporationService.createCorporation(corporationCreationCommand);
 
         // 멤버 조회
         Member member = memberRepository.findMemberByLoginId("1234").get();
