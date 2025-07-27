@@ -28,5 +28,10 @@ public class Recruit {
     public Recruit(Post post, Member member) {
         this.post = post;
         this.member = member;
+        this.status = Status.PENDING;
+    }
+
+    public void pass() {
+        this.status = Status.PASS;
     }
 }

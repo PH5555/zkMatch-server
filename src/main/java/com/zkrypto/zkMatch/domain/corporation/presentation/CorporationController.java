@@ -163,6 +163,8 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PutMapping("/post/{postId}")
-    public void passApplier(@PathVariable(name = "postId") String postId, @RequestBody PassApplierCommand passApplierCommand){
+    public ApiResponse<Void> passApplier(@PathVariable(name = "postId") String postId, @RequestBody PassApplierCommand passApplierCommand){
+        corporationService.passApplier(postId, passApplierCommand);
+        return ApiResponse.success();
     }
 }

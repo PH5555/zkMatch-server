@@ -6,6 +6,7 @@ import com.zkrypto.zkMatch.domain.corporation.domain.entity.Corporation;
 import com.zkrypto.zkMatch.domain.corporation.domain.repository.CorporationRepository;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PassApplierCommand;
 import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
 import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.application.dto.response.PostApplierResponse;
@@ -60,7 +61,6 @@ public class CorporationService {
     /**
      * 기업 조회 메서드
      */
-    @Transactional
     public CorporationResponse getCorporation(UUID memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
@@ -113,5 +113,29 @@ public class CorporationService {
         // 지원자 조회
         List<Recruit> appliers = recruitRepository.findByPostWithMember(post);
         return appliers.stream().map(PostApplierResponse::from).toList();
+    }
+
+    /**
+     * 지원자 합격 메서드
+     */
+    @Transactional
+    public void passApplier(String postId, PassApplierCommand passApplierCommand) {
+        // 공고 조회
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_POST));
+
+        // 지원자 조회
+        Recruit recruit = recruitRepository.findRecruitByMemberAndPost(UUID.fromString(passApplierCommand.getApplierId()), post)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_APPLIED_TO_POSTING));
+
+        // 이미 합격한 지원자인지 확인
+        if(recruit.getStatus() == Status.PASS) {
+            throw new CustomException(ErrorCode.ALREADY_PASSED);
+        }
+
+        // 합격 처리
+        recruit.pass();
+        
+        // TODO: 합격 이메일 전송
     }
 }

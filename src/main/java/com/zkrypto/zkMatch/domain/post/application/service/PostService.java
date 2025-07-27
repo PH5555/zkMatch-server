@@ -53,7 +53,6 @@ public class PostService {
         }
 
         // 제출 기한이 지난 공고인지 확인
-        log.info(post.getEndDate().toString());
         if(LocalDateTime.now().isAfter(post.getEndDate())) {
             throw new CustomException(ErrorCode.EXPIRED_POST);
         }
