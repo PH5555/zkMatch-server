@@ -10,6 +10,9 @@ import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationComma
 import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
 import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
+import com.zkrypto.zkMatch.domain.recruit.domain.constant.Status;
+import com.zkrypto.zkMatch.domain.recruit.domain.entity.Recruit;
+import com.zkrypto.zkMatch.domain.recruit.domain.repository.RecruitRepository;
 import com.zkrypto.zkMatch.global.response.exception.CustomException;
 import com.zkrypto.zkMatch.global.response.exception.ErrorCode;
 import lombok.AllArgsConstructor;
@@ -27,6 +30,7 @@ public class CorporationService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+    private final RecruitRepository recruitRepository;
 
     /**
      * 기업 생성 메서드
@@ -89,6 +93,8 @@ public class CorporationService {
     }
 
     private CorporationPostResponse toCorporationPostResponse(Post post) {
-        return CorporationPostResponse.from(post, 1,2);
+        List<Recruit> appliers = recruitRepository.findByPost(post);
+        List<Recruit> passer = appliers.stream().filter(applier -> applier.getStatus() == Status.PASS).toList();
+        return CorporationPostResponse.from(post, appliers.size(), passer.size());
     }
 }

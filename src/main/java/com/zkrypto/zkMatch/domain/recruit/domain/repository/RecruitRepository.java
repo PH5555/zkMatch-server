@@ -11,4 +11,6 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long> {
     boolean existsByMemberAndPost(Member member, Post post);
 
     List<Recruit> findByMember(Member member);
+
+    List<Recruit> findByPost(Post post);
 }
