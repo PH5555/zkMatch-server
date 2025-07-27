@@ -140,7 +140,7 @@ public class CorporationController {
     })
     @GetMapping("/post/{postId}")
     public ApiResponse<List<PostApplierResponse>> getPostApplier(@PathVariable(name = "postId") String postId){
-        return ApiResponse.success(null);
+        return ApiResponse.success(corporationService.getPostApplier(postId));
     }
 
     @Operation(

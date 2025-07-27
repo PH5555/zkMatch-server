@@ -8,6 +8,7 @@ import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
 import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
 import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.PostApplierResponse;
 import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
 import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
 import com.zkrypto.zkMatch.domain.recruit.domain.constant.Status;
@@ -93,8 +94,24 @@ public class CorporationService {
     }
 
     private CorporationPostResponse toCorporationPostResponse(Post post) {
+        // 지원자 조회
         List<Recruit> appliers = recruitRepository.findByPost(post);
+
+        // 합격자 필터링
         List<Recruit> passer = appliers.stream().filter(applier -> applier.getStatus() == Status.PASS).toList();
         return CorporationPostResponse.from(post, appliers.size(), passer.size());
+    }
+
+    /**
+     * 공고 지원자 조회 메서드
+     */
+    public List<PostApplierResponse> getPostApplier(String postId) {
+        // 공고 조회
+        Post post = postRepository.findById(UUID.fromString(postId))
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_POST));
+
+        // 지원자 조회
+        List<Recruit> appliers = recruitRepository.findByPostWithMember(post);
+        return appliers.stream().map(PostApplierResponse::from).toList();
     }
 }

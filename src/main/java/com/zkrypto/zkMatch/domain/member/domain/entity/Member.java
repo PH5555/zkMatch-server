@@ -26,6 +26,7 @@ public class Member {
     private String name;
     private String email;
     private String phoneNumber;
+    private String personalStatement;
 
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
