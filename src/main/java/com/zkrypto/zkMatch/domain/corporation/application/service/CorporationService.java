@@ -135,7 +135,7 @@ public class CorporationService {
 
         // 합격 처리
         recruit.pass();
-        
+
         // TODO: 합격 이메일 전송
     }
 }
