@@ -1,12 +1,12 @@
 package com.zkrypto.zkMatch.domain.post.domain.entity;
 
 import com.zkrypto.zkMatch.domain.corporation.domain.entity.Corporation;
-import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -17,6 +17,9 @@ public class Post {
     private UUID postId;
 
     private String title;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name = "corporation_id")

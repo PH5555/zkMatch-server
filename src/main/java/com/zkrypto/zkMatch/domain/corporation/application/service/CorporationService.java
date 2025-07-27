@@ -6,7 +6,8 @@ import com.zkrypto.zkMatch.domain.corporation.domain.entity.Corporation;
 import com.zkrypto.zkMatch.domain.corporation.domain.repository.CorporationRepository;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
-import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.domain.post.domain.entity.Post;
 import com.zkrypto.zkMatch.domain.post.domain.repository.PostRepository;
 import com.zkrypto.zkMatch.global.response.exception.CustomException;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -72,5 +74,21 @@ public class CorporationService {
         // 공고 생성
         Post post = Post.from(postCreationCommand, member.getCorporation());
         postRepository.save(post);
+    }
+
+    /**
+     * 기업 공고 조회 메서드
+     */
+    public List<CorporationPostResponse> getCorporationPost(UUID memberId) {
+        // 멤버 존재 확인
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+
+        List<Post> posts = postRepository.findPostByCorporation(member.getCorporation());
+        return posts.stream().map(this::toCorporationPostResponse).toList();
+    }
+
+    private CorporationPostResponse toCorporationPostResponse(Post post) {
+        return CorporationPostResponse.from(post, 1,2);
     }
 }

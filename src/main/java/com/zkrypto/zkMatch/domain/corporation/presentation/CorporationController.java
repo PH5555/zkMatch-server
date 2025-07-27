@@ -3,10 +3,10 @@ package com.zkrypto.zkMatch.domain.corporation.presentation;
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
 import com.zkrypto.zkMatch.domain.corporation.application.dto.response.CorporationResponse;
 import com.zkrypto.zkMatch.domain.corporation.application.service.CorporationService;
-import com.zkrypto.zkMatch.domain.post.application.response.CorporationPostResponse;
-import com.zkrypto.zkMatch.domain.post.application.request.PassApplierCommand;
-import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
-import com.zkrypto.zkMatch.domain.post.application.response.PostApplierResponse;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PassApplierCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.PostApplierResponse;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -91,7 +91,7 @@ public class CorporationController {
     })
     @GetMapping("/post")
     public ApiResponse<List<CorporationPostResponse>> getPost(@AuthenticationPrincipal UUID memberId){
-        return ApiResponse.success(null);
+        return ApiResponse.success(corporationService.getCorporationPost(memberId));
     }
 
     @Operation(
