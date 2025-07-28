@@ -1,10 +1,12 @@
 package com.zkrypto.zkMatch.domain.corporation.presentation;
 
 import com.zkrypto.zkMatch.domain.corporation.application.dto.request.CorporationCreationCommand;
-import com.zkrypto.zkMatch.domain.post.application.response.CorporationPostResponse;
-import com.zkrypto.zkMatch.domain.post.application.request.PassApplierCommand;
-import com.zkrypto.zkMatch.domain.post.application.request.PostCreationCommand;
-import com.zkrypto.zkMatch.domain.post.application.response.PostApplierResponse;
+import com.zkrypto.zkMatch.domain.corporation.application.dto.response.CorporationResponse;
+import com.zkrypto.zkMatch.domain.corporation.application.service.CorporationService;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PassApplierCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.request.PostCreationCommand;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.PostApplierResponse;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +26,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/corporation")
+@RequiredArgsConstructor
 @Tag(name = "CorporationController", description = "기업 관련 API")
 public class CorporationController {
+
+    private final CorporationService corporationService;
+
     @Operation(
             summary = "기업 정보 조회 API",
             description = "기업 정보를 조회 합니다.",
@@ -42,11 +49,11 @@ public class CorporationController {
     )
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청 성공",
-                    content = {@Content(schema = @Schema(implementation = Void.class))}),
+                    content = {@Content(schema = @Schema(implementation = CorporationResponse.class))}),
     })
     @GetMapping()
-    public void getCorporation(@AuthenticationPrincipal UUID memberId) {
-
+    public ApiResponse<CorporationResponse> getCorporation(@AuthenticationPrincipal UUID memberId) {
+        return ApiResponse.success(corporationService.getCorporation(memberId));
     }
 
     @Operation(
@@ -58,8 +65,9 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PostMapping()
-    public void createCorporation(@RequestBody CorporationCreationCommand corporationCreationCommand) {
-
+    public ApiResponse<Void> createCorporation(@RequestBody CorporationCreationCommand corporationCreationCommand) {
+        corporationService.createCorporation(corporationCreationCommand);
+        return ApiResponse.success();
     }
 
     @Operation(
@@ -83,7 +91,7 @@ public class CorporationController {
     })
     @GetMapping("/post")
     public ApiResponse<List<CorporationPostResponse>> getPost(@AuthenticationPrincipal UUID memberId){
-        return ApiResponse.success(null);
+        return ApiResponse.success(corporationService.getCorporationPost(memberId));
     }
 
     @Operation(
@@ -106,8 +114,9 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PostMapping("/post")
-    public void createPost(@RequestBody PostCreationCommand postCreationCommand){
-
+    public ApiResponse<Void> createPost(@AuthenticationPrincipal UUID memberId, @RequestBody PostCreationCommand postCreationCommand){
+        corporationService.createPost(memberId, postCreationCommand);
+        return ApiResponse.success();
     }
 
     @Operation(
@@ -131,7 +140,7 @@ public class CorporationController {
     })
     @GetMapping("/post/{postId}")
     public ApiResponse<List<PostApplierResponse>> getPostApplier(@PathVariable(name = "postId") String postId){
-        return ApiResponse.success(null);
+        return ApiResponse.success(corporationService.getPostApplier(postId));
     }
 
     @Operation(
@@ -154,6 +163,8 @@ public class CorporationController {
                     content = {@Content(schema = @Schema(implementation = Void.class))}),
     })
     @PutMapping("/post/{postId}")
-    public void passApplier(@PathVariable(name = "postId") String postId, @RequestBody PassApplierCommand passApplierCommand){
+    public ApiResponse<Void> passApplier(@PathVariable(name = "postId") String postId, @RequestBody PassApplierCommand passApplierCommand){
+        corporationService.passApplier(postId, passApplierCommand);
+        return ApiResponse.success();
     }
 }
