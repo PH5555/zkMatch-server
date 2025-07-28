@@ -2,7 +2,7 @@ package com.zkrypto.zkMatch.domain.member.application.service;
 
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberPostResponse;
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberResponse;
-import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberScrabResponse;
+import com.zkrypto.zkMatch.domain.scrab.application.dto.response.ScrabResponse;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
 import com.zkrypto.zkMatch.domain.recruit.domain.entity.Recruit;
@@ -58,19 +58,5 @@ public class MemberService {
         List<Recruit> recruit = recruitRepository.findByMemberWithPost(member);
 
         return recruit.stream().map(MemberPostResponse::from).toList();
-    }
-
-    /**
-     * 스크랩 공고 조회 메서드
-     */
-    public List<MemberScrabResponse> getScrab(UUID memberId) {
-        // 멤버 존재 확인
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
-
-        // 스크랩 내역 조회
-        List<Scrab> scrabs = scrabRepository.findByMember(member);
-
-        return scrabs.stream().map(MemberScrabResponse::from).toList();
     }
 }

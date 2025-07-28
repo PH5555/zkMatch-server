@@ -2,9 +2,7 @@ package com.zkrypto.zkMatch.domain.member.presentation;
 
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberPostResponse;
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberResponse;
-import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberScrabResponse;
 import com.zkrypto.zkMatch.domain.member.application.service.MemberService;
-import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -103,29 +101,5 @@ public class MemberController {
     @GetMapping("/post")
     public ApiResponse<List<MemberPostResponse>> getMemberPost(@AuthenticationPrincipal UUID memberId) {
         return ApiResponse.success(memberService.getPost(memberId));
-    }
-
-    @Operation(
-            summary = "스크랩 공고 조회 API",
-            description = "내가 스크랩한 공고를 조회합니다.",
-            security = {
-                    @SecurityRequirement(name = "bearerAuth")
-            },
-            parameters = {
-                    @Parameter(
-                            in = ParameterIn.HEADER,
-                            name = "Authorization",
-                            description = "Bearer 토큰",
-                            required = true
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청 성공",
-                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation = MemberScrabResponse.class)))}),
-    })
-    @GetMapping("/scrab")
-    public ApiResponse<List<MemberScrabResponse>> getMemberScrab(@AuthenticationPrincipal UUID memberId) {;
-        return ApiResponse.success(memberService.getScrab(memberId));
     }
 }
