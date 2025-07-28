@@ -2,10 +2,13 @@ package com.zkrypto.zkMatch.domain.member.application.service;
 
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberPostResponse;
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberResponse;
+import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberScrabResponse;
 import com.zkrypto.zkMatch.domain.member.domain.entity.Member;
 import com.zkrypto.zkMatch.domain.member.domain.repository.MemberRepository;
 import com.zkrypto.zkMatch.domain.recruit.domain.entity.Recruit;
 import com.zkrypto.zkMatch.domain.recruit.domain.repository.RecruitRepository;
+import com.zkrypto.zkMatch.domain.scrab.domain.entity.Scrab;
+import com.zkrypto.zkMatch.domain.scrab.domain.repository.ScrabRepository;
 import com.zkrypto.zkMatch.global.response.exception.CustomException;
 import com.zkrypto.zkMatch.global.response.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import java.util.UUID;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final RecruitRepository recruitRepository;
+    private final ScrabRepository scrabRepository;
 
     /**
      * 멤버 조회 메서드
@@ -54,5 +58,19 @@ public class MemberService {
         List<Recruit> recruit = recruitRepository.findByMemberWithPost(member);
 
         return recruit.stream().map(MemberPostResponse::from).toList();
+    }
+
+    /**
+     * 스크랩 공고 조회 메서드
+     */
+    public List<MemberScrabResponse> getScrab(UUID memberId) {
+        // 멤버 존재 확인
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+
+        // 스크랩 내역 조회
+        List<Scrab> scrabs = scrabRepository.findByMember(member);
+
+        return scrabs.stream().map(MemberScrabResponse::from).toList();
     }
 }
