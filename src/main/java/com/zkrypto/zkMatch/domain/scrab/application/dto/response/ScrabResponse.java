@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class ScrabResponse {
     private String postId;
-    private String postString;
+    private String postTitle;
 
-    private ScrabResponse(String postId, String postString) {
+    private ScrabResponse(String postId, String postTitle) {
         this.postId = postId;
-        this.postString = postString;
+        this.postTitle = postTitle;
     }
 
     public static ScrabResponse from(Scrab scrab) {
