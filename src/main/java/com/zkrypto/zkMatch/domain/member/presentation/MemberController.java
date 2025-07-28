@@ -1,11 +1,14 @@
 package com.zkrypto.zkMatch.domain.member.presentation;
 
+import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberPostResponse;
 import com.zkrypto.zkMatch.domain.member.application.dto.response.MemberResponse;
 import com.zkrypto.zkMatch.domain.member.application.service.MemberService;
+import com.zkrypto.zkMatch.domain.post.application.dto.response.CorporationPostResponse;
 import com.zkrypto.zkMatch.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -74,5 +78,28 @@ public class MemberController {
     @GetMapping()
     public ApiResponse<MemberResponse> getMember(@AuthenticationPrincipal UUID memberId) {
         return ApiResponse.success(memberService.getMember(memberId));
+    }
+
+    @Operation(
+            summary = "지원 내역 조회 API",
+            description = "내가 지원한 공고의 정보를 조회합니다.",
+            security = {
+                    @SecurityRequirement(name = "bearerAuth")
+            },
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.HEADER,
+                            name = "Authorization",
+                            description = "Bearer 토큰",
+                            required = true
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청 성공",
+                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation = MemberPostResponse.class)))}),
+    })
+    public ApiResponse<List<MemberPostResponse>> getMemberPost(@AuthenticationPrincipal UUID memberId) {
+        return ApiResponse.success(memberService.getPost(memberId));
     }
 }
