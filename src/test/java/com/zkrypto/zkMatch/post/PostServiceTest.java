@@ -41,9 +41,6 @@ public class PostServiceTest {
     MemberRepository memberRepository;
 
     @Autowired
-    PostRepository postRepository;
-
-    @Autowired
     PostService postService;
 
     @Test
