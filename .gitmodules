@@ -1,0 +1,8 @@
+[submodule "zkMatch-core-server"]
+	path = zkMatch-core-server
+	url = https://github.com/PH5555/zkMatch-core-server
+ 	branch = main
+[submodule "zkMatch-email-server"]
+	path = zkMatch-email-server
+	url = https://github.com/PH5555/zkMatch-email-server
+	branch = main
